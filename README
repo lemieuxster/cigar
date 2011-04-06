@@ -1,0 +1,14 @@
+Cigar.js
+
+Use Cigar to import JavaScript dependencies in your .js files. 
+
+Example Usage:
+_import("path.to.js.fileName");
+
+this will import /path/to/js/fileName.js by adding the script tag to the head.
+
+Other config options:
+_import("path.to.js.fileName", {async: "true", cacheBust: "203949"});
+
+this will import /path/to/js/fileName.js?203949 with the async attribute set. 
+

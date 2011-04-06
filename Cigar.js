@@ -18,8 +18,10 @@
                 scriptPath = scriptPath + "?" + config.cacheBust
             }
 
+            //TODO allow setting of "classPath" to determine script path root
             tag.src = "/" + scriptPath;
 
+            //TODO look this up once and remember it
             var head = document.documentElement.firstChild;
             if (!head || (head.nodeName && head.nodeName.toLowerCase().indexOf("comment")>-1)) {
                 head = document.getElementsByTagName("head")[0];
@@ -32,11 +34,3 @@
     _import = Cigar._import;
 })();
 
-/*
-TODOS:
-Chaining _import("path.to", {})._import ... 
-Callbacks callback(bool)
-Import Queue (read in list of chained imports, wait, load, do callbacks)
-Final Callback (all complete) 
-Set base script directory (classPath)
-*/

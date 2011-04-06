@@ -4,9 +4,9 @@
         _paths : {}
     };
 
-    Cigar._import = function(classPath, config) {
-        if (!Cigar._paths[classPath]) {
-            var scriptPath = classPath.replace(/\./g, "/") + ".js";
+    Cigar._import = function(importPath, config) {
+        if (!Cigar._paths[importPath]) {
+            var scriptPath = importPath.replace(/\./g, "/") + ".js";
 
             var tag = document.createElement("script");
             tag.type = "text/javascript";
@@ -25,9 +25,18 @@
                 head = document.getElementsByTagName("head")[0];
             }
             head.appendChild(tag);
-            Cigar._paths[classPath] = "1";
+            Cigar._paths[importPath] = "1";
         }
     };
 
     _import = Cigar._import;
 })();
+
+/*
+TODOS:
+Chaining _import("path.to", {})._import ... 
+Callbacks callback(bool)
+Import Queue (read in list of chained imports, wait, load, do callbacks)
+Final Callback (all complete) 
+Set base script directory (classPath)
+*/

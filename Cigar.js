@@ -57,7 +57,7 @@
             cigar_queue.push(tag);
         }
 
-        cigar_wait = setTimeout(Cigar.next, 73);
+        cigar_wait = setTimeout(Cigar.next, 25);
 
         return Cigar;
     };

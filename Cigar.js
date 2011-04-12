@@ -5,6 +5,7 @@
 
     //Queue of paths to load
     var cigar_queue = [],
+    cigar_isrunning = false,
 
     //Wait while paths are added to the queue
     cigar_wait = null,
@@ -35,24 +36,27 @@
     cigar_runCallback = function() {
       var callback = cigar_queue.shift();
       callback();
-      cigar_next();
+      return cigar_next();
     },
 
     //Do the next tag in the queue
     cigar_next = function() {
+        cigar_isrunning = true;
         if (cigar_timeout) {
             clearTimeout(cigar_timeout);
         }
         if (cigar_queue.length > 0) {
             if (typeof cigar_queue[0] === "function") {
-               cigar_runCallback();
+               return cigar_runCallback();
             } else {
                cigar_loadScript();
                cigar_timeout = setTimeout(cigar_error, 5000);
             }
         } else {
+            cigar_isrunning = false;
             cigar_complete();
         }
+        
         return Cigar;
     },
 
@@ -61,6 +65,7 @@
         if (cigar_timeout) {
             clearTimeout(cigar_timeout);
         }
+        cigar_isrunning = false
         cigar_fail();
     };
 
@@ -94,10 +99,13 @@
             };
 
             cigar_paths[classPath] = scriptPath;
-            cigar_queue.push(tag);
+            if (!cigar_isrunning) {
+               cigar_queue.push(tag);
+               cigar_wait = setTimeout(cigar_next, 25);
+            } else {
+               cigar_queue.unshift(tag);
+            }
         }
-
-        cigar_wait = setTimeout(cigar_next, 25);
 
         return Cigar;
     };
@@ -105,7 +113,11 @@
     //Add a function in to the queue, called in sequence
     Cigar._tap = function(callbackFn) {
       if (typeof callbackFn === "function") {
-         cigar_queue.push(callbackFn);
+         if (!cigar_isrunning) {
+            cigar_queue.push(callbackFn);
+         } else {
+            cigar_queue.splice(1, 0, callbackFn);
+         }
       }
       
       return Cigar;

@@ -35,6 +35,7 @@
     cigar_runCallback = function() {
       var callback = cigar_queue.shift();
       callback();
+      cigar_next();
     },
 
     //Do the next tag in the queue

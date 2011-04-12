@@ -43,7 +43,7 @@
             clearTimeout(cigar_timeout);
         }
         if (cigar_queue.length > 0) {
-            if (typeof cigar_queue[0] === "function" {
+            if (typeof cigar_queue[0] === "function") {
                cigar_runCallback();
             } else {
                cigar_loadScript();

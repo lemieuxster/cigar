@@ -30,6 +30,12 @@
         }
         head.appendChild(tag);
     },
+    
+    //Run a callback method
+    cigar_runCallback = function() {
+      var callback = cigar_queue.shift();
+      callback();
+    },
 
     //Do the next tag in the queue
     cigar_next = function() {
@@ -37,14 +43,19 @@
             clearTimeout(cigar_timeout);
         }
         if (cigar_queue.length > 0) {
-            cigar_loadScript();
-            cigar_timeout = setTimeout(cigar_error, 5000);
+            if (typeof cigar_queue[0] === "function" {
+               cigar_runCallback();
+            } else {
+               cigar_loadScript();
+               cigar_timeout = setTimeout(cigar_error, 5000);
+            }
         } else {
             cigar_complete();
         }
         return Cigar;
     },
 
+    //Error handler
     cigar_error = function() {
         if (cigar_timeout) {
             clearTimeout(cigar_timeout);
@@ -88,6 +99,15 @@
         cigar_wait = setTimeout(cigar_next, 25);
 
         return Cigar;
+    };
+    
+    //Add a function in to the queue, called in sequence
+    Cigar.tap = function(callbackFn) {
+      if (typeof callbackFn === "function") {
+         cigar_queue.push(callbackFn);
+      }
+      
+      return Cigar;
     };
 
     //Set the complete callback function

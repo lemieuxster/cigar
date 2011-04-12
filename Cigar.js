@@ -103,7 +103,7 @@
     };
     
     //Add a function in to the queue, called in sequence
-    Cigar.tap = function(callbackFn) {
+    Cigar._tap = function(callbackFn) {
       if (typeof callbackFn === "function") {
          cigar_queue.push(callbackFn);
       }
@@ -112,13 +112,13 @@
     };
 
     //Set the complete callback function
-    Cigar.complete = function(callbackFn) {
+    Cigar._complete = function(callbackFn) {
         cigar_complete = callbackFn;
         return Cigar;
     };
 
     //Set the error callback function
-    Cigar.error = function(failFn) {
+    Cigar._error = function(failFn) {
         cigar_fail = failFn;
         return Cigar;
     };

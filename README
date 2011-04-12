@@ -19,7 +19,16 @@ You can also chain dependencies:
 _import("some.path.fileName").
 _import("another.path.fileName").
 _import("i.need.those.other.two").
-complete(function() {
+_complete(function() {
+    //called when all are loaded
+});
+
+You can also add inter-load callbacks like this:
+_import("some.path.fileName").
+_import("another.path.fileName").
+_tap(function() { doSomethingHere(); }).
+_import("i.need.those.other.two").
+_complete(function() {
     //called when all are loaded
 });
 
@@ -28,6 +37,5 @@ http://lemieuxster.com/dev/js/cigar/index.html
 
 
 Coming soon:
--The ability to add callbacks in between dependencies.
 -The ability to change the main "class path"
 -The ability to change the load timeout time.

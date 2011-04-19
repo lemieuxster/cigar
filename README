@@ -38,4 +38,7 @@ http://lemieuxster.com/dev/js/cigar/index.html
 
 Coming soon:
 -The ability to change the main "class path"
--The ability to change the load timeout time.
+-The ability to change the load timeout time.'
+
+Idea:
+_if(condition)._import._import._elseIf()._else()

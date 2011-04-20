@@ -1,18 +1,24 @@
-Cigar.js
+____ Cigar.js
 
 Use Cigar to import JavaScript dependencies in your .js files. 
 
-Example Usage:
+/****************
+ * EXAMPLES
+ ***************/
+
+//Basic Example:
 _import("path.to.js.fileName");
 
 this will import /path/to/js/fileName.js by adding the script tag to the head.
 
-Other config options:
+
+//Config Options:
 _import("path.to.js.fileName", {async: "true", cacheBust: "203949"});
 
 this will import /path/to/js/fileName.js?203949 with the async attribute set. 
 
 
+//Chaining:
 You can also chain dependencies:
 //Hat tip to @jeffremer for the idea on this one.
 
@@ -32,13 +38,35 @@ _complete(function() {
     //called when all are loaded
 });
 
+
+/****************
+ * OPTIONS
+ ***************/
+//Class Path:
+You can change the "classPath" like so:
+Cigar._classPath("/path/to/script/directory");
+
+which will make it so that:
+_import("com.lemieuxster.util.Test");
+
+will load ("/path/to/script/directory/com/lemieuxster/util/Test.js");
+
+
+/****************
+ * DEMO
+ ***************/
 You can see an very simple example here:
 http://lemieuxster.com/dev/js/cigar/index.html
 
 
+/****************
+ * NOTES
+ ***************/
 Coming soon:
--The ability to change the main "class path"
 -The ability to change the load timeout time.'
 
-Idea:
+
+/****************
+ * IDEAS
+ ***************/
 _if(condition)._import._import._elseIf()._else()

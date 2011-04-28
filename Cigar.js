@@ -15,19 +15,17 @@
         //Wait while paths are added to the queue
             cigar_wait = null,
 
-        //Paths imported
+        //Paths imported list
             cigar_paths = {},
 
         //Class path
             cigar_classPath = "",
 
-        //Complete function
-            cigar_complete = function() {
-            },
+        //Final function stack
+            cigar_final = [],
 
-        //Fail function
-            cigar_fail = function() {
-            },
+        //Fail function stack
+            cigar_fail = [],
 
         //Wait for script to load (5 seconds)
             cigar_timeout = null,
@@ -51,7 +49,7 @@
                 if (cigar_wait) {
                     clearTimeout(cigar_wait);
                 }
-                cigar_wait = setTimeout(cigar_start, 25);
+                cigar_wait = setTimeout(cigar_start, 15);
                 return Cigar;
             },
 
@@ -66,7 +64,7 @@
                         if (q.length > 0) {
                             var nextQItem = q.shift();
                             if (typeof nextQItem === "function") {
-                                return cigar_runCallback(nextQItem);
+                                return cigar_run_callback(nextQItem);
                             } else {
                                 cigar_loadScript(nextQItem);
                                 cigar_timeout = setTimeout(cigar_error, 5000);
@@ -77,7 +75,7 @@
                         }
                     } else {
                         cigar_isRunning = false;
-                        cigar_complete();
+                        cigar_run_final();
                     }
                 }
 
@@ -95,7 +93,7 @@
             },
 
         //Run a callback method
-            cigar_runCallback = function(callback) {
+            cigar_run_callback = function(callback) {
                 callback();
                 return cigar_next();
             },
@@ -106,8 +104,26 @@
                     clearTimeout(cigar_timeout);
                 }
                 cigar_isRunning = false;
-                cigar_fail();
+                cigar_run_fail();
                 return Cigar
+            },
+
+        //Final caller
+            cigar_run_final = function() {
+                for (var i = 0, l = cigar_final.length; i < l; ++i) {
+                    if (typeof cigar_final[i] === "function") {
+                        cigar_final[i]();
+                    }
+                }
+            },
+
+        //Error caller
+            cigar_run_fail = function() {
+                for (var i = 0, l = cigar_fail.length; i < l; ++i) {
+                    if (typeof cigar_fail[i] === "function") {
+                        cigar_fail[i]();
+                    }
+                }
             };
 
     //Create script tag, add to queue, return Cigar for chaining
@@ -142,7 +158,7 @@
             cigar_paths[classPath] = scriptPath;
             cigar_queue.push(tag);
             if (!cigar_isRunning) {
-                cigar_wait = setTimeout(cigar_start, 25);
+                cigar_wait = setTimeout(cigar_start, 15);
             } else {
                 //interrupt
                 cigar_interrupt();
@@ -164,17 +180,22 @@
         return Cigar;
     };
 
-    //Set the complete callback function
+    //Set a complete callback function and puts it on the stack
     Cigar._complete = function(callbackFn) {
-        //TODO make array, call last added (stack)
-        cigar_complete = callbackFn;
+        var q = [callbackFn];
+        cigar_stack.unshift(q);
         return Cigar;
     };
 
-    //Set the error callback function
+    //Push a final callback on the stack, run once all done
+    Cigar._final = function(callbackFn) {
+        cigar_final.unshift(callbackFn);
+        return Cigar;
+    };
+
+    //Set an error callback on the stack, run if there is an error
     Cigar._error = function(failFn) {
-        //TODO make array, loop through
-        cigar_fail = failFn;
+        cigar_fail.unshift(failFn);
         return Cigar;
     };
 

@@ -19,14 +19,13 @@ this will import /path/to/js/fileName.js?203949 with the async attribute set.
 
 
 //Chaining:
-You can also chain dependencies:
-//Hat tip to @jeffremer for the idea on this one.
+You can also chain dependencies -hat tip @jeffremer-:
 
 _import("some.path.fileName").
 _import("another.path.fileName").
 _import("i.need.those.other.two").
 _complete(function() {
-    //called when all are loaded
+    //called when this set is loaded
 });
 
 You can also add inter-load callbacks like this:
@@ -35,7 +34,10 @@ _import("another.path.fileName").
 _tap(function() { doSomethingHere(); }).
 _import("i.need.those.other.two").
 _complete(function() {
-    //called when all are loaded
+    //called this set is loaded
+}).
+_final(function() {
+    //called at the end of all imports
 });
 
 
